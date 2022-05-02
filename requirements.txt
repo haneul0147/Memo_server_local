@@ -1,0 +1,10 @@
+Flask==1.1.4
+Werkzeug==1.0.1
+flask_restful
+flask_jwt_extended
+mysql.connector
+passlib
+email_validator
+boto3
+botocore
+

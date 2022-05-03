@@ -7,9 +7,10 @@ from http import HTTPStatus
 from flask_restful import Api
 from flask_jwt_extended import JWTManager
 
-from resources.posting import FileUpload
 
-from resources.user import UserInfoResource, UserLoginResource, UserLogoutResource, UserRegisterResource, jwt_blacklist
+from resources.posting import PostingResource,PostingeditResource,delPostingResource
+from resources.postinglist import myPostinginfoResource 
+from resources.user import UserInfoResource,UserLoginResource, UserLogoutResource, UserRegisterResource, jwt_blacklist
 
 
 app = Flask(__name__)
@@ -29,12 +30,14 @@ def check_if_token_is_revoked(jwt_header, jwt_payload) :
 api = Api(app)
 
 # 경로와 리소스를 연결한다.
-api.add_resource(UserRegisterResource, '/api/v1/user/register')
-api.add_resource(UserLoginResource, '/api/v1/user/login')
-api.add_resource(UserLogoutResource, '/api/v1/user/logout')
-api.add_resource(UserInfoResource, '/api/v1/user/me')
-
-api.add_resource(FileUpload,'/api/v1/posting')
+api.add_resource(UserRegisterResource, '/api/v1/user/register') # 회원가입
+api.add_resource(UserLoginResource, '/api/v1/user/login') # 로그인
+api.add_resource(UserLogoutResource, '/api/v1/user/logout') # 로그아웃 
+api.add_resource(UserInfoResource, '/api/v1/user/info') # 내 정보 가져오기  
+api.add_resource(PostingResource,'/api/v1/posting') # 업로드 하기 
+api.add_resource(PostingeditResource,'/api/v1/editposting/<int:posting_id>') # 포스팅 수정 
+api.add_resource(myPostinginfoResource,'/api/v1/mypostinginfo') # 내가 쓴 포스팅 정보가져오기
+api.add_resource(delPostingResource,'/api/v1/deleteposting/<int:posting_id>') # 포스팅 삭제하기 
 
 
 if __name__ == '__main__' :

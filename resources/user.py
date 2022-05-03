@@ -195,7 +195,7 @@ class UserInfoResource(Resource) :
         try :
             connection = get_connection()
 
-            query = '''select id, email, nickname 
+            query = '''select id, email, nickname, status, img_url 
                         from user
                         where id = %s; '''
             
@@ -221,6 +221,8 @@ class UserInfoResource(Resource) :
             
             user_email = user_info["email"]
             user_nickname = user_info["nickname"]
+            user_status = user_info["status"]
+            user_img_url = user_info["img_url"]
         
         
             # 우리 화면의 하단에 있는, 내 리뷰만 가져오는 데이터는
@@ -243,4 +245,4 @@ class UserInfoResource(Resource) :
                 print('connection does not exist')
         
         
-        return {"user_email" : user_email,"user_nickname":user_nickname}
+        return {"user_email" : user_email,"user_nickname":user_nickname,"user_status":user_status,"user_img_url":user_img_url}

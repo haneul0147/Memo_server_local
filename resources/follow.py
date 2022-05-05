@@ -95,7 +95,7 @@ class FollowListResource(Resource) :
             connection = get_connection()
 
             # 2. 해당 테이블, recipe 테이블에서 select
-            query = '''select f.follower_id, f.following_id, u.nickname
+            query = '''select f.follower_id, f.following_id, u.nickname, u.img_url
                         from
                         (select * from follow
                         where follower_id=%s) f
@@ -140,7 +140,8 @@ class SearchUserResource(Resource) :
             connection = get_connection()
 
          # 2. 해당 테이블, recipe 테이블에서 select
-            query = '''SELECT user.id, user.nickname FROM user
+            query = '''SELECT user.id, user.nickname , user.img_url 
+                        FROM user
                         where nickname like "%''' + keyword +'''%"
                         order by nickname
                         limit '''+ offset +''', '''+ limit + '''; '''

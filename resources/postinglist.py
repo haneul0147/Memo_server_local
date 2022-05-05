@@ -27,13 +27,15 @@ class myPostinginfoResource(Resource) :
 
         try :
             connection = get_connection()
-
-            query = '''select p.img_url,p.content,p.created_at from posting p 
-                        join user u
-                        on u.id = p.user_id
-                        where u.id = %s
-                        order by created_at desc
-                        limit '''+ offset + ','+limit+''';'''
+            # 쿼리문 
+            query = '''select p.img_url,p.content,p.created_at,c.comment from user u
+                        join posting p
+                        on u.id=p.user_id
+                        left join postcomment c 
+                        on u.id = c.user_id && c.posting_id =p.id
+                        where u.id= %s
+                        order by p.created_at desc
+                        limit  '''+ offset + ','+limit+''';'''
             
             param = (user_id, )
             
@@ -79,10 +81,11 @@ class allPostinginfoResource(Resource) :
         try :
             connection = get_connection()
 
-            query = '''select p.img_url,p.content,p.created_at from posting p 
-                        join user u
-                        on u.id = p.user_id
-                        where u.id = %s
+            query = '''select u.nickname,p.img_url,p.content,p.created_at,c.comment from user u
+                        join posting p
+                        on u.id=p.user_id
+                        left join postcomment c 
+                        on u.id = c.user_id && c.posting_id =p.id 
                         order by created_at desc
                         limit '''+ offset + ','+limit+''';'''
             
@@ -90,7 +93,7 @@ class allPostinginfoResource(Resource) :
             
             cursor = connection.cursor(dictionary = True)
 
-            cursor.execute(query,param)
+            cursor.execute(query,)
 
             # select 문은 아래 내용이 필요하다.
             record_list = cursor.fetchall()

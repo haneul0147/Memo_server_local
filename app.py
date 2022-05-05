@@ -9,7 +9,7 @@ from flask_jwt_extended import JWTManager
 
 
 from resources.posting import PostingResource,PostingeditResource,delPostingResource
-from resources.postinglist import myPostinginfoResource 
+from resources.postinglist import myPostinginfoResource ,allPostinginfoResource
 from resources.user import UserInfoResource,UserLoginResource, UserLogoutResource, UserRegisterResource, jwt_blacklist
 
 
@@ -37,6 +37,7 @@ api.add_resource(UserInfoResource, '/api/v1/user/info') # 내 정보 가져오�
 api.add_resource(PostingResource,'/api/v1/posting') # 업로드 하기 
 api.add_resource(PostingeditResource,'/api/v1/editposting/<int:posting_id>') # 포스팅 수정 
 api.add_resource(myPostinginfoResource,'/api/v1/mypostinginfo') # 내가 쓴 포스팅 정보가져오기
+api.add_resource(allPostinginfoResource,'/api/v1/postinginfo') # 모든 포스팅 가져오기 
 api.add_resource(delPostingResource,'/api/v1/deleteposting/<int:posting_id>') # 포스팅 삭제하기 
 
 

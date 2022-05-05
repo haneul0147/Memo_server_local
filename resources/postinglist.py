@@ -9,7 +9,6 @@ from mysql.connector.errors import Error
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from werkzeug.utils import secure_filename
-import boto3
 
 from config import Config
 
@@ -70,11 +69,9 @@ class myPostinginfoResource(Resource) :
         return{'posting_list' : record_list}
 
 class allPostinginfoResource(Resource) :
-    @jwt_required()
  # 모든 포스팅 리스트 보기  
     def get(self) :
      
-        user_id = get_jwt_identity()
         offset = request.args.get('offset')
         limit = request.args.get('limit')
 
@@ -89,7 +86,6 @@ class allPostinginfoResource(Resource) :
                         order by created_at desc
                         limit '''+ offset + ','+limit+''';'''
             
-            param = (user_id, )
             
             cursor = connection.cursor(dictionary = True)
 

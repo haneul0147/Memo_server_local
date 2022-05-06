@@ -6,6 +6,7 @@ from http import HTTPStatus
 
 from flask_restful import Api
 from flask_jwt_extended import JWTManager
+from resources.follow import FollowListResource, FollowResource, SearchUserResource
 
 
 from resources.posting import PostingResource,PostingeditResource,delPostingResource
@@ -40,8 +41,10 @@ api.add_resource(PostingeditResource,'/api/v1/editposting/<int:posting_id>') # �
 api.add_resource(myPostinginfoResource,'/api/v1/mypostinginfo') # 내가 쓴 포스팅 정보가져오기
 api.add_resource(allPostinginfoResource,'/api/v1/postinginfo') # 모든 포스팅 가져오기 
 api.add_resource(delPostingResource,'/api/v1/deleteposting/<int:posting_id>') # 포스팅 삭제하기 
+api.add_resource(FollowResource,'/api/v1/user/following/<int:f_user_id>') # 팔로우 추가/삭제
+api.add_resource(FollowListResource,'/api/v1/user/following' ) # 팔로우 리스트
+api.add_resource(SearchUserResource, '/api/v1/user/search') # 유저 검색
 api.add_resource(commentResource,'/api/v1/comment/<int:posting_id>') # 댓글달기
-
 
 
 if __name__ == '__main__' :

@@ -12,7 +12,7 @@ from resources.follow import FollowListResource, FollowResource, SearchUserResou
 from resources.posting import PostingResource,PostingeditResource,delPostingResource
 from resources.postinglist import myPostinginfoResource ,allPostinginfoResource
 from resources.user import UserInfoResource,UserLoginResource, UserLogoutResource, UserRegisterResource, jwt_blacklist
-from resources.comment import commentResource
+from resources.comment import commentResource,editcommentResource
 
 
 app = Flask(__name__)
@@ -45,7 +45,7 @@ api.add_resource(FollowResource,'/api/v1/user/following/<int:f_user_id>') # 팔�
 api.add_resource(FollowListResource,'/api/v1/user/following' ) # 팔로우 리스트
 api.add_resource(SearchUserResource, '/api/v1/user/search') # 유저 검색
 api.add_resource(commentResource,'/api/v1/comment/<int:posting_id>') # 댓글달기
-
+api.add_resource(editcommentResource,'/api/v1/editcomment/<int:posting_id>') # 댓글 수정 
 
 if __name__ == '__main__' :
     app.run()

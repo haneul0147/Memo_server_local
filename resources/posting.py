@@ -222,7 +222,7 @@ class PostingeditResource(Resource) :
                 connection.close()
                 print('MySQL connection is closed')     
 
-        return {'result':'수정 되었습니다.'}
+        return {'result':'포스팅이 수정 되었습니다.'}
 class delPostingResource(Resource) :
     @jwt_required()
     #포스팅 삭제
@@ -295,5 +295,5 @@ class delPostingResource(Resource) :
                 print('connection does not exist')
 
       
-        return {'result' : '삭제 되었습니다.'}
+        return {'result' : '포스팅 글이 삭제 되었습니다.'}
 

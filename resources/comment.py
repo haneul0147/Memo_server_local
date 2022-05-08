@@ -209,5 +209,5 @@ class delcommentResource(Resource) :
                 print('connection does not exist')
 
       
-        return {'result' : '삭제 되었습니다.'}
+        return {'result' : '댓글이 삭제 되었습니다.'}
          

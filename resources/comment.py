@@ -38,17 +38,6 @@ class commentResource(Resource) :
             # 5. 커넥션을 커밋한다.=> 디비에 영구적으로 반영하라는 뜻.
             connection.commit()
 
-            # select 문은 아래 내용이 필요하다.
-            record_list = cursor.fetchall()
-            
-            print(record_list)
-
-             ### 중요. 파이썬의 시간은, JSON으로 보내기 위해서
-            ### 문자열로 바꿔준다.
-            i = 0
-            for record in record_list:
-                record_list[i]['created_at'] = str(record['created_at'])
-                i = i + 1
             
         # 위의 코드를 실행하다가, 문제가 생기면, except를 실행하라는 뜻.
         except Error as e :

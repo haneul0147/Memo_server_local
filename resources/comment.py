@@ -64,14 +64,14 @@ class commentResource(Resource) :
             else :
                 print('connection does not exist')
         
-        return{'result' : '댓글이 업데이트 되었습니다.'}
+        return{'result' : '댓글이 업데이트 되었습니다.'},200
 
 
 
 class editcommentResource(Resource) :
     @jwt_required()
     #댓글 수정하기 
-    def post(self, posting_id) :
+    def post(self, posting_id,comment_id) :
 
         user_id = get_jwt_identity()
         comment = request.form.get('comment')
@@ -83,9 +83,9 @@ class editcommentResource(Resource) :
             #Select 문을 이용해서 현재 user_id와 posting_id가 같은지 확인한다.
             query = '''select * 
                         from postcomment
-                        where user_id=%s AND posting_id= %s; '''
+                        where user_id=%s AND posting_id= %s AND id= %s; '''
                                     
-            param = (user_id,posting_id)
+            param = (user_id,posting_id,comment_id)
             #  커넥션으로부터 커서를 가져온다.
             cursor = connection.cursor(dictionary = True)
             #  쿼리문을 커서에 넣어서 실행한다.
@@ -122,6 +122,8 @@ class editcommentResource(Resource) :
                 # 5. 커넥션을 커밋한다.=> 디비에 영구적으로 반영하라는 뜻.
                 connection.commit()
 
+            else :
+                return {'result':'존재하지 않는 댓글입니다.'}, 202
 
         except Error as e:
             print('Error ', e)
@@ -140,7 +142,7 @@ class editcommentResource(Resource) :
 class delcommentResource(Resource) :
     @jwt_required()
     # 댓글 삭제
-    def delete(self, posting_id) :
+    def delete(self, posting_id,comment_id) :
         
         user_id = get_jwt_identity()
 
@@ -150,9 +152,9 @@ class delcommentResource(Resource) :
 
             query = '''select * 
                         from postcomment
-                        where user_id=%s AND posting_id= %s; '''
+                        where user_id=%s AND posting_id= %s AND id= %s; '''
             
-            param = (user_id,posting_id)
+            param = (user_id,posting_id,comment_id)
             
             cursor = connection.cursor(dictionary = True)
 
@@ -179,7 +181,7 @@ class delcommentResource(Resource) :
                             where id = %s;'''
                 # 파이썬에서, 튜플만들때, 데이터가 1개인 경우에는 콤마를 꼭
                 # 써준다.
-                record = (posting_id, )
+                record = (comment_id, )
                 
                 # 3. 커넥션으로부터 커서를 가져온다.
                 cursor = connection.cursor()
@@ -191,7 +193,7 @@ class delcommentResource(Resource) :
                 connection.commit()
 
             else :
-                return {'error' : '작성한 포스팅이 아닙니다.'}, 400
+                return {'error' : '존재하지 않는 댓글입니다.'}, 202
 
             
         # 위의 코드를 실행하다가, 문제가 생기면, except를 실행하라는 뜻.
@@ -209,5 +211,5 @@ class delcommentResource(Resource) :
                 print('connection does not exist')
 
       
-        return {'result' : '댓글이 삭제 되었습니다.'}
+        return {'result' : '댓글이 삭제 되었습니다.'},200
          

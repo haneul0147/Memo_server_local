@@ -109,9 +109,10 @@ class editcommentResource(Resource) :
         
                 # 2. 업데이트 쿼리문을 이용하여 수정시킨다.
                 query = '''update postcomment
-                            set comment = %s;'''
+                            set comment = %s
+                            where user_id=%s AND posting_id= %s AND id= %s;'''
                 # 파이썬에서, 튜플만들때, 데이터가 1개인 경우에는 콤마를 꼭 써준다.
-                record = (comment,)
+                record = (comment,user_id,posting_id,comment_id)
                 
                 # 3. 커넥션으로부터 커서를 가져온다.
                 cursor = connection.cursor()
@@ -166,10 +167,7 @@ class delcommentResource(Resource) :
 
             ### 중요. 파이썬의 시간은, JSON으로 보내기 위해서
             ### 문자열로 바꿔준다.
-            i = 0
-            for record in record_list:
-                record_list[i]['created_at'] = str(record['created_at'])
-                i = i + 1
+    
 
             # 해당 포스팅의 정보를 가져온다.
             posting_info = record_list[0]

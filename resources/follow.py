@@ -118,7 +118,7 @@ class FollowListResource(Resource) :
         except Error as e :
             # 뒤의 e는 에러를 찍어라 error를 e로 저장했으니까!
             print('Error while connecting to MySQL', e)
-            return {'list' : []}, HTTPStatus.INTERNAL_SERVER_ERROR
+            return {'count' : 0, 'list' : []}, HTTPStatus.INTERNAL_SERVER_ERROR
         # finally 는 try에서 에러가 나든 안나든, 무조건 실행하라는 뜻.
         finally : 
             print('finally')
@@ -128,7 +128,7 @@ class FollowListResource(Resource) :
                 print('MySQL connection is closed')
             else :
                 print('connection does not exist')
-        return {'list' : record_list }, HTTPStatus.OK 
+        return {'count' : len(record_list), 'list' : record_list }, HTTPStatus.OK 
 
 
 class SearchUserResource(Resource) :

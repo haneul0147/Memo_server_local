@@ -86,6 +86,8 @@ class FollowResource(Resource) :
 class FollowListResource(Resource) :
     @jwt_required()
     def get(self) :
+        offset = request.args.get('offset')
+        limit = request.args.get('limit')
         user_id = get_jwt_identity()
         print(user_id)
         try :
@@ -101,7 +103,8 @@ class FollowListResource(Resource) :
                         where follower_id=%s) f
                         left join user u
                         on f.following_id = u.id
-                        order by nickname; '''
+                        order by nickname
+                        limit '''+ offset +''', '''+ limit + '''; '''
             
             record = (user_id, )
             cursor = connection.cursor(dictionary = True)

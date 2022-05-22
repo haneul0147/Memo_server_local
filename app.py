@@ -37,9 +37,9 @@ api.add_resource(UserLogoutResource, '/api/v1/user/logout') # 로그아웃
 api.add_resource(UserInfoResource, '/api/v1/user/info') # 내 정보 가져오기  
 api.add_resource(PostingResource,'/api/v1/posting') # 업로드 하기 
 api.add_resource(PostingeditResource,'/api/v1/editposting/<int:posting_id>') # 포스팅 수정 
-api.add_resource(MyPostinginfoResource,'/api/v1/mypostinginfo/<int:posting_id>') # 내가 쓴 포스팅 정보가져오기
+api.add_resource(MyPostinginfoResource,'/api/v1/mypostinginfo') # 내가 쓴 포스팅 정보가져오기
 api.add_resource(AllPostinginfoResource,'/api/v1/postinginfo') # 모든 포스팅 가져오기 
-api.add_resource(SearchPostinginfoResource,'/api/v1/postinginfo') # 검색한 포스팅 가져오기
+api.add_resource(SearchPostinginfoResource,'/api/v1/searchpostinginfo/<int:user_id>') # 검색한 포스팅 가져오기
 api.add_resource(delPostingResource,'/api/v1/deleteposting/<int:posting_id>') # 포스팅 삭제하기 
 api.add_resource(FollowResource,'/api/v1/user/following/<int:f_user_id>') # 팔로우 추가/삭제
 api.add_resource(FollowListResource,'/api/v1/user/following' ) # 팔로우 리스트

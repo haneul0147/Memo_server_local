@@ -17,8 +17,8 @@ from datetime import date, datetime
 
 class MyPostinginfoResource(Resource) :
     @jwt_required()
- # 내가 쓴 포스팅 리스트 보기  
-    def get(self,posting_id) :
+    # 내가 쓴 포스팅 리스트 보기  
+    def get(self) :
      
         user_id = get_jwt_identity()
 
@@ -27,15 +27,26 @@ class MyPostinginfoResource(Resource) :
 
         try :
             connection = get_connection()
-            # 쿼리문 
-            query = '''select p.id,u.nickname,p.img_url,p.content,p.created_at from user u
-                        join posting p
-                        on u.id=p.user_id
-                        left join postcomment c 
-                        on u.id = c.user_id && c.posting_id =p.id
-                        where u.id= %s
-                        order by p.created_at desc
-                        limit '''+ offset + ','+limit+''';'''
+            # 쿼리문
+            query = '''select pl.id,pl.user_id,pl.nickname,pl.img_url,pl.content,pl.created_at,pcl.mpid as comment_id ,cl.id as comment_user_id,cl.nickname as comment_nickname,pcl.comment,pcl.created_at as comment_created_at
+                        from  (select posting.id, posting.user_id, user.nickname, posting.img_url, posting.content, posting.created_at
+                        from posting
+                        left join user
+                        on posting.user_id = user.id
+                        order by posting.created_at desc
+                        limit '''+ offset + ','+limit+''') as pl
+                        left join
+                        (select p.id,p.posting_id, max(p.id) as mpid,p.comment,p.created_at,p.user_id
+                        from postcomment p
+                        group by posting_id
+                        order by posting_id desc) as pcl
+                        on pl.id = pcl.posting_id && pcl.id=pcl.mpid
+                        left join 
+                        (select u.id,u.nickname
+                        from user u)as cl
+                        on pcl.user_id = cl.id
+                        where pl.user_id = %s ;'''
+            
             
             param = (user_id, )
             
@@ -47,28 +58,16 @@ class MyPostinginfoResource(Resource) :
             posting_list = cursor.fetchall()
             print(posting_list)
 
-
-            query = '''select c.user_id,u.nickname,c.comment,c.created_at from user u
-                        join posting p
-                        on u.id=p.user_id
-                        left join postcomment c 
-                        on u.id = c.user_id && c.posting_id =p.id
-                        where p.id= %s
-                        order by p.created_at desc
-                        limit '''+ offset + ','+limit+''';'''
-            
-            param = (posting_id, )
-            
-            cursor = connection.cursor(dictionary = True)
-
-            cursor.execute(query,param)
-
-            # select 문은 아래 내용이 필요하다.
-            comment_list = cursor.fetchall()
-            print(comment_list)
-             ### 중요. 파이썬의 시간은, JSON으로 보내기 위해서
+            ### 중요. 파이썬의 시간은, JSON으로 보내기 위해서
             ### 문자열로 바꿔준다.
-        
+            i = 0
+            l = 0
+            for record in posting_list:
+                posting_list[i]['created_at'] = str(record['created_at'])
+                posting_list[l]['comment_created_at'] = str(record['comment_created_at'])
+                i = i + 1
+                l = l + 1 
+
             
         # 위의 코드를 실행하다가, 문제가 생기면, except를 실행하라는 뜻.
         except Error as e :
@@ -83,7 +82,7 @@ class MyPostinginfoResource(Resource) :
                 print('MySQL connection is closed')
             else :
                 print('connection does not exist')
-        return{'posting_list' : posting_list , 'comment_list':comment_list}
+        return{'posting_list' : posting_list }
 
 class AllPostinginfoResource(Resource) :
  # 모든 포스팅 리스트 보기  
@@ -146,16 +145,25 @@ class SearchPostinginfoResource(Resource) :
 
         try :
             connection = get_connection()
-            # 쿼리문 
-            query = '''select p.id,u.nickname,p.img_url,p.content,p.created_at from user u
-                        join posting p
-                        on u.id=p.user_id
-                        left join postcomment c 
-                        on u.id = c.user_id && c.posting_id =p.id
-                        where u.id= %s
-                        order by p.created_at desc
-                        limit '''+ offset + ','+limit+''';'''
-            
+          # 쿼리문
+            query = '''select pl.id,pl.user_id,pl.nickname,pl.img_url,pl.content,pl.created_at,pcl.mpid as comment_id ,cl.id as comment_user_id,cl.nickname as comment_nickname,pcl.comment,pcl.created_at as comment_created_at
+                        from  (select posting.id, posting.user_id, user.nickname, posting.img_url, posting.content, posting.created_at
+                        from posting
+                        left join user
+                        on posting.user_id = user.id
+                        order by posting.created_at desc
+                        limit '''+ offset + ','+limit+''') as pl
+                        left join
+                        (select p.id,p.posting_id, max(p.id) as mpid,p.comment,p.created_at,p.user_id
+                        from postcomment p
+                        group by posting_id
+                        order by posting_id desc) as pcl
+                        on pl.id = pcl.posting_id && pcl.id=pcl.mpid
+                        left join 
+                        (select u.id,u.nickname
+                        from user u)as cl
+                        on pcl.user_id = cl.id
+                        where pl.user_id = %s ;'''
             param = (user_id, )
             
             cursor = connection.cursor(dictionary = True)
@@ -165,29 +173,15 @@ class SearchPostinginfoResource(Resource) :
             # select 문은 아래 내용이 필요하다.
             posting_list = cursor.fetchall()
             print(posting_list)
-
-
-            query = '''select c.user_id,u.nickname,c.comment,c.created_at from user u
-                        join posting p
-                        on u.id=p.user_id
-                        left join postcomment c 
-                        on u.id = c.user_id && c.posting_id =p.id
-                        where p.id= %s
-                        order by p.created_at desc
-                        limit '''+ offset + ','+limit+''';'''
-            
-            param = (user_id, )
-            
-            cursor = connection.cursor(dictionary = True)
-
-            cursor.execute(query,param)
-
-            # select 문은 아래 내용이 필요하다.
-            comment_list = cursor.fetchall()
-            print(comment_list)
-             ### 중요. 파이썬의 시간은, JSON으로 보내기 위해서
+            ### 중요. 파이썬의 시간은, JSON으로 보내기 위해서
             ### 문자열로 바꿔준다.
-        
+            i = 0
+            l = 0
+            for record in posting_list:
+                posting_list[i]['created_at'] = str(record['created_at'])
+                posting_list[l]['comment_created_at'] = str(record['comment_created_at'])
+                i = i + 1
+                l = l + 1 
             
         # 위의 코드를 실행하다가, 문제가 생기면, except를 실행하라는 뜻.
         except Error as e :

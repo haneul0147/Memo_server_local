@@ -94,13 +94,24 @@ class AllPostinginfoResource(Resource) :
         try :
             connection = get_connection()
 
-            query = '''select u.nickname,p.img_url,p.content,p.created_at,c.comment from user u
-                        join posting p
-                        on u.id=p.user_id
-                        left join postcomment c 
-                        on u.id = c.user_id && c.posting_id =p.id 
-                        order by created_at desc
-                        limit '''+ offset + ','+limit+''';'''
+            query = '''select pl.id,pl.user_id,pl.nickname,pl.img_url,pl.content,pl.created_at,pcl.mpid as comment_id ,cl.id as comment_user_id,cl.nickname as comment_nickname,pcl.comment,pcl.created_at as comment_created_at
+                        from  (select posting.id, posting.user_id, user.nickname, posting.img_url, posting.content, posting.created_at
+                        from posting
+                        left join user
+                        on posting.user_id = user.id
+                        order by posting.created_at desc
+                        limit '''+ offset + ','+limit+''') as pl
+                        left join
+                        (select p.id,p.posting_id, max(p.id) as mpid,p.comment,p.created_at,p.user_id
+                        from postcomment p
+                        group by posting_id
+                        order by posting_id desc) as pcl
+                        on pl.id = pcl.posting_id && pcl.id=pcl.mpid
+                        left join 
+                        (select u.id,u.nickname
+                        from user u)as cl
+                        on pcl.user_id = cl.id ;'''
+            
             
             
             cursor = connection.cursor(dictionary = True)

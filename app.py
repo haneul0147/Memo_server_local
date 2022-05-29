@@ -46,7 +46,7 @@ api.add_resource(FollowListResource,'/api/v1/user/following' ) # 팔로우 리�
 api.add_resource(GetfollowcntResource,'/api/v1/user/following/<int:follower_id>') # 팔로우 수 가져오기
 api.add_resource(SearchUserResource, '/api/v1/user/search') # 유저 검색
 api.add_resource(commentResource,'/api/v1/comment/<int:posting_id>') # 댓글달기
-api.add_resource(getcommentResource,'/api/v1/getcomment/<int:posting_id>') # 댓글달기
+api.add_resource(getcommentResource,'/api/v1/getcomment/<int:posting_id>') # 댓글가져오기
 api.add_resource(editcommentResource,'/api/v1/editcomment/<int:posting_id>/<int:comment_id>') # 댓글 수정 
 api.add_resource(delcommentResource,'/api/v1/delcomment/<int:posting_id>/<int:comment_id>') # 댓글 삭제 
 

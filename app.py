@@ -42,7 +42,7 @@ api.add_resource(AllPostinginfoResource,'/api/v1/postinginfo') # 모든 포스�
 api.add_resource(SearchPostinginfoResource,'/api/v1/searchpostinginfo/<int:user_id>') # 검색한 포스팅 가져오기
 api.add_resource(delPostingResource,'/api/v1/deleteposting/<int:posting_id>') # 포스팅 삭제하기 
 api.add_resource(FollowResource,'/api/v1/user/following/<int:f_user_id>') # 팔로우 추가/삭제
-api.add_resource(FollowListResource,'/api/v1/user/following' ) # 팔로우 리스트
+api.add_resource(FollowListResource,'/api/v1/user/following' ) #p 팔로우 리스트
 api.add_resource(GetfollowcntResource,'/api/v1/user/following/<int:follower_id>') # 팔로우 수 가져오기
 api.add_resource(SearchUserResource, '/api/v1/user/search') # 유저 검색
 api.add_resource(commentResource,'/api/v1/comment/<int:posting_id>') # 댓글달기

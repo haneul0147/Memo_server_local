@@ -119,15 +119,20 @@ class AllPostinginfoResource(Resource) :
             cursor.execute(query,)
 
             # select 문은 아래 내용이 필요하다.
-            record_list = cursor.fetchall()
-            print(record_list)
+             # select 문은 아래 내용이 필요하다.
+            posting_list = cursor.fetchall()
+            print(posting_list)
 
-             ### 중요. 파이썬의 시간은, JSON으로 보내기 위해서
+            ### 중요. 파이썬의 시간은, JSON으로 보내기 위해서
             ### 문자열로 바꿔준다.
             i = 0
-            for record in record_list:
-                record_list[i]['created_at'] = str(record['created_at'])
+            l = 0
+            for record in posting_list:
+                posting_list[i]['created_at'] = str(record['created_at'])
+                posting_list[l]['comment_created_at'] = str(record['comment_created_at'])
                 i = i + 1
+                l = l + 1 
+
             
         # 위의 코드를 실행하다가, 문제가 생기면, except를 실행하라는 뜻.
         except Error as e :
@@ -142,7 +147,7 @@ class AllPostinginfoResource(Resource) :
                 print('MySQL connection is closed')
             else :
                 print('connection does not exist')
-        return{'posting_list' : record_list}
+        return{'posting_list' : posting_list}
 
 
 
